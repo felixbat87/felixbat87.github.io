@@ -1,26 +1,515 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es" style="scroll-behavior: smooth;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"  href="./css/pages.css">
-    <title >Felix Otero</title>
+    <title>Lente & Alma | Portafolio Fotográfico</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Playfair Display (Artístico) y Roboto (Material) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Iconos de Material Design -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #d4af37;
+            --bg-light: #f9f9f9;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-light);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .navbar-brand {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- Navbar Estilo Material --- */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            color: #555 !important;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            margin: 0 5px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-color) !important;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+
+        .hero .btn {
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Botón Material Design */
+        .btn-material {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
+        .btn-material:hover {
+            background-color: #b5952f;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* --- Galería Masonry --- */
+        .gallery-section {
+            padding: 6rem 0;
+        }
+
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 1.5rem;
+        }
+
+        @media (max-width: 992px) { .masonry-grid { column-count: 2; } }
+        @media (max-width: 576px) { .masonry-grid { column-count: 1; } }
+
+        .photo-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            padding: 25px 20px 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: white;
+            transform: translateY(10px);
+        }
+
+        .photo-item:hover .overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Sección Sobre Mí --- */
+        .about-card {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* --- Contacto --- */
+        .contact-section {
+            background-color: #f4f4f4;
+            padding: 6rem 0;
+        }
+
+        .form-control {
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            padding: 14px;
+            background-color: #fafafa;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+            border-color: var(--accent-color);
+            background-color: #fff;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+            padding: 4rem 0 2rem;
+        }
+
+        .social-icon {
+            transition: transform 0.3s, color 0.3s;
+            cursor: pointer;
+        }
+        .social-icon:hover {
+            transform: scale(1.2);
+            color: var(--accent-color);
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+        .scroll-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+    </style>
 </head>
 <body>
-    <h1 class="titulo">
-        Felix Otero Page
-    </h1>
-    <hr>
-    <p>
-        Hola Mundo!
-    </p>
 
-    <div>
-        <img src="img/Screenshot 2025-06-20 195156.png" alt="">
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">LENTE & ALMA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="material-icons">menu</span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link active" href="#inicio">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#portafolio">Portafolio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#artista">El Artista</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header id="inicio" class="hero">
+        <div class="container">
+            <h1 class="display-1">Capturando lo Efímero</h1>
+            <p class="lead mb-5 fs-4">Fotografía artística, editorial y de retrato que trasciende el tiempo.</p>
+            <a href="#portafolio" class="btn btn-material">Ver Trabajos</a>
+        </div>
+        <div style="position: absolute; bottom: 30px; animation: bounce 2s infinite;">
+            <span class="material-icons text-white opacity-75">keyboard_arrow_down</span>
+        </div>
+    </header>
+
+    <!-- Sección Portafolio -->
+    <section id="portafolio" class="gallery-section container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Selección Reciente</h2>
+            <div style="width: 60px; height: 3px; background: var(--accent-color); margin: 15px auto;"></div>
+            <p class="text-muted fs-5">Una colección de momentos, luces y sombras.</p>
+        </div>
+
+        <div class="masonry-grid">
+            <div class="photo-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Retrato Mujer">
+                <div class="overlay">
+                    <h5 class="mb-1">Mirada Perdida</h5>
+                    <small class="text-white-50">Retrato Editorial</small>
+                </div>
+            </div>
+            
+            <div class="photo-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Paisaje Naturaleza">
+                <div class="overlay">
+                    <h5 class="mb-1">Mañana Brumosa</h5>
+                    <small class="text-white-50">Paisajismo</small>
+                </div>
+            </div>
+
+            <div class="photo-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Moda">
+                <div class="overlay">
+                    <h5 class="mb-1">Alta Costura</h5>
+                    <small class="text-white-50">Fashion Week</small>
+                </div>
+            </div>
+
+            <div class="photo-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1554080353-a576cf803b5a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Arquitectura">
+                <div class="overlay">
+                    <h5 class="mb-1">Geometría Urbana</h5>
+                    <small class="text-white-50">Arquitectura</small>
+                </div>
+            </div>
+
+            <div class="photo-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Abstracto">
+                <div class="overlay">
+                    <h5 class="mb-1">Silueta Roja</h5>
+                    <small class="text-white-50">Arte Conceptual</small>
+                </div>
+            </div>
+
+            <div class="photo-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cámara Vintage">
+                <div class="overlay">
+                    <h5 class="mb-1">Análogo</h5>
+                    <small class="text-white-50">Bodegón</small>
+                </div>
+            </div>
+            
+            <div class="photo-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1502823403499-6d2ef5960939?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Boda Artística">
+                <div class="overlay">
+                    <h5 class="mb-1">Eternidad</h5>
+                    <small class="text-white-50">Bodas</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección El Artista -->
+    <section id="artista" class="py-5 bg-white">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-5">
+                    <div style="position: relative;">
+                        <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="img-fluid rounded-3 shadow-lg" alt="Fotógrafo" style="max-height: 500px; object-fit: cover; width: 100%;">
+                        <div style="position: absolute; bottom: -20px; right: -20px; background: var(--accent-color); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+                            <h3 class="mb-0 fw-bold">10+</h3>
+                            <small>Años de Exp.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="about-card">
+                        <h3 class="mb-3 fw-bold">Detrás del Lente</h3>
+                        <p class="text-muted fs-5 fst-italic mb-4">"La fotografía no trata de capturar la realidad, sino de crear una nueva realidad que conmueva."</p>
+                        <p class="mb-3">Soy Alex Rivera, un fotógrafo apasionado por la luz natural y las emociones crudas. Con más de una década de experiencia, mi trabajo se centra en encontrar la belleza en lo imperfecto y contar historias visuales que perduren en el tiempo.</p>
+                        <p class="mb-4">Especializado en fotografía editorial, bodas artísticas y retratos de estudio que capturan la esencia del sujeto.</p>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="material-icons text-muted" style="font-size: 2rem;">photo_camera</span>
+                            <div>
+                                <small class="text-uppercase text-muted fw-bold">Firma</small>
+                                <p class="mb-0 fw-bold fs-5">Alex Rivera</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center mb-5">
+                    <h2 class="display-6 fw-bold">Creemos algo juntos</h2>
+                    <p class="text-muted mt-3">¿Tienes un proyecto en mente? Me encantaría escuchar tu visión.</p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm">
+                        <form onsubmit="event.preventDefault(); alert('¡Gracias por tu mensaje! Te contactaré pronto.');">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label small text-muted fw-bold text-uppercase">Nombre</label>
+                                    <input type="text" class="form-control" placeholder="Tu nombre" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label small text-muted fw-bold text-uppercase">Email</label>
+                                    <input type="email" class="form-control" placeholder="nombre@ejemplo.com" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label small text-muted fw-bold text-uppercase">Tipo de Proyecto</label>
+                                <select class="form-select form-control">
+                                    <option>Retrato Editorial</option>
+                                    <option>Boda / Evento</option>
+                                    <option>Moda</option>
+                                    <option>Otro</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label small text-muted fw-bold text-uppercase">Mensaje</label>
+                                <textarea class="form-control" rows="4" placeholder="Cuéntame sobre tu idea..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-material w-100 py-3">Enviar Solicitud</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <h3 class="text-white mb-4 fw-bold" style="letter-spacing: 2px;">LENTE & ALMA</h3>
+            <div class="mb-5">
+                <span class="material-icons social-icon fs-4 mx-2">instagram</span>
+                <span class="material-icons social-icon fs-4 mx-2">facebook</span>
+                <span class="material-icons social-icon fs-4 mx-2">email</span>
+                <span class="material-icons social-icon fs-4 mx-2">public</span>
+            </div>
+            <div class="border-top border-secondary pt-4">
+                <p class="small text-muted mb-0">&copy; 2026 Alex Rivera Photography. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Lightbox -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-body p-0 position-relative">
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="text-center">
+                        <img src="" id="modalImage" class="img-fluid rounded-2 shadow-lg" alt="Full size">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <video src="videos/galeria.mp4" controls autoplay="true"></video>
+
+    <!-- Scroll Top Button -->
+    <div class="scroll-top" onclick="window.scrollTo(0,0)">
+        <span class="material-icons">arrow_upward</span>
     </div>
-<script src="./js/app.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Modal Logic
+        const modalElement = document.getElementById('imageModal');
+        const modal = new bootstrap.Modal(modalElement);
+        const modalImg = document.getElementById('modalImage');
+
+        function openModal(element) {
+            const imgSrc = element.querySelector('img').src;
+            modalImg.src = imgSrc;
+            modal.show();
+        }
+
+        // Navbar Scroll Effect & Scroll Top Button
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            const scrollBtn = document.querySelector('.scroll-top');
+            
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (window.scrollY > 500) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        });
+
+        // Active Link Highlighting
+        const sections = document.querySelectorAll('section, header');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
+
